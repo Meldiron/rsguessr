@@ -90,6 +90,13 @@
 					>Play Game</a
 				>
 
+				{#if data.user}
+					<a
+						class="font-medium text-brand-500 hover:text-brand-400 md:py-6 dark:text-brand-400 dark:hover:text-brand-300"
+						href="/me/packs">My Packs</a
+					>
+				{/if}
+
 				{#if !data.user}
 					<a
 						href="/auth/login"
@@ -160,7 +167,7 @@
 		<!-- End Col -->
 
 		<div class="mt-3">
-			<p class="text-brand-500">© RSGuessr 2024, screenshots by RuneScape.</p>
+			<p class="text-brand-500">© RSGuessr 2026, screenshots from RuneScape.</p>
 		</div>
 
 		<!-- Social Brands -->

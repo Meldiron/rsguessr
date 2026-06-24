@@ -32,9 +32,19 @@ export const load: PageLoad = async ({ params, parent }) => {
 		Query.limit(1)
 	]);
 
+	// Blurhash is keyed by the storage file id; missing is fine (falls back to black).
+	let blurhash: string | null = null;
+	try {
+		const doc = await databases.getDocument('main', 'blurhashes', location.imageId);
+		blurhash = doc.blurhash ?? null;
+	} catch {
+		blurhash = null;
+	}
+
 	return {
 		pack,
 		location,
+		blurhash,
 		finish: finish.documents[0] ? finish.documents[0] : null
 	};
 };

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { storage } from '$lib/appwrite';
 	import type { PageData } from './$types';
+	import BlurImage from '$lib/BlurImage.svelte';
 
 	export let data: PageData;
 
@@ -8,10 +9,10 @@
 	const packId = data.pack.$id;
 
 	const locations = data.locations.map((location) => {
-		console.log(data.finishes.filter((finish) => finish.locationId === location.$id)[0]);
 		return {
 			id: location.$id,
-			imageUrl: storage.getFilePreview('locationImages', location.imageId, 400, 600, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 'webp').toString(),
+			imageUrl: storage.getFileView('locationImages', location.imageId).toString(),
+			blurhash: data.blurhashes?.[location.imageId] ?? null,
 			completedHardmode: (data.finishes.filter((finish) => finish.locationId === location.$id)[0] ?? {}).hardMode ? true : false,
 			completed: data.finishes.filter((finish) => finish.locationId === location.$id).length > 0
 		};
@@ -37,8 +38,9 @@
 				</h1>
 			{/if}
 		{#each locations as location}
-		<a class={`border group h-[300px] relative flex flex-col w-full min-h-[15rem] bg-center bg-cover rounded-xl hover:shadow-lg transition dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 border-brand-900`} style={`background-image: url('${location.imageUrl}')`} href={`/me/game/${data.pack.$id}/${location.id}`}>
-			<div class="flex-auto p-4">
+		<a class={`border group h-[300px] relative flex flex-col w-full min-h-[15rem] overflow-hidden rounded-xl hover:shadow-lg transition dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 border-brand-900`} href={`/me/game/${data.pack.$id}/${location.id}`}>
+			<BlurImage src={location.imageUrl} blurhash={location.blurhash} alt="" class="absolute inset-0 w-full h-full" />
+			<div class="relative z-10 flex-auto p-4">
 				{#if location.completed}
 				<span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium rounded-full bg-green-900 text-green-400">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
@@ -76,7 +78,7 @@
 				{/if}
 
 			</div>
-			<div class="p-4 pt-5 flex justify-center w-full rounded-xl rounded-t-none" style="backdrop-filter: brightness(80%) blur(2px);">
+			<div class="relative z-10 p-4 pt-5 flex justify-center w-full rounded-xl rounded-t-none" style="backdrop-filter: brightness(80%) blur(2px);">
 			  <div class="inline-flex items-center gap-2 text-sm font-medium text-white group-hover:text-white/[.7]">
 				Visit Location
 				<svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>

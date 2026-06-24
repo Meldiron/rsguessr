@@ -1,24 +1,85 @@
 {
     "projectId": "rs3-guessr",
     "projectName": "RSGuessr",
-    "buckets": [
+    "functions": [
         {
-            "$id": "locationImages",
-            "$createdAt": "2023-12-02T15:53:58.488+00:00",
-            "$updatedAt": "2023-12-02T15:54:11.415+00:00",
-            "$permissions": [],
-            "fileSecurity": true,
-            "name": "locationImages",
-            "enabled": true,
-            "maximumFileSize": 10485760,
-            "allowedFileExtensions": [
-                "jpg",
-                "png",
-                "jpeg"
+            "$id": "guessLocation",
+            "name": "guessLocation",
+            "runtime": "node-18.0",
+            "execute": [
+                "users"
             ],
-            "compression": "none",
-            "encryption": true,
-            "antivirus": true
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "deploymentRetention": 0,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "buildSpecification": "s-4vcpu-4gb",
+            "runtimeSpecification": "s-4vcpu-4gb",
+            "commands": "npm install",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "path": "functions/guessLocation"
+        },
+        {
+            "$id": "blurhashGeneration",
+            "name": "blurhashGeneration",
+            "runtime": "node-25",
+            "buildSpecification": "s-4vcpu-4gb",
+            "runtimeSpecification": "s-4vcpu-4gb",
+            "execute": [
+                "any"
+            ],
+            "events": ["buckets.locationImages.files.*.create"],
+            "scopes": [
+                "files.read",
+                "documents.read",
+                "documents.write"
+            ],
+            "schedule": "0 * * * *",
+            "timeout": 900,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "deploymentRetention": 0,
+            "path": "functions/blurhashgeneration"
+        },
+        {
+            "$id": "api",
+            "name": "api",
+            "runtime": "node-25",
+            "buildSpecification": "s-4vcpu-4gb",
+            "runtimeSpecification": "s-4vcpu-4gb",
+            "execute": [
+                "users"
+            ],
+            "events": [],
+            "scopes": [
+                "documents.read",
+                "documents.write",
+                "files.write"
+            ],
+            "schedule": "",
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "deploymentRetention": 0,
+            "path": "functions/api"
         }
     ],
     "databases": [
@@ -39,7 +100,7 @@
             "databaseId": "main",
             "name": "packs",
             "enabled": true,
-            "documentSecurity": false,
+            "documentSecurity": true,
             "attributes": [
                 {
                     "key": "name",
@@ -49,20 +110,6 @@
                     "required": true,
                     "array": false,
                     "size": 255,
-                    "default": null
-                },
-                {
-                    "key": "accessType",
-                    "type": "string",
-                    "status": "available",
-                    "error": "",
-                    "required": true,
-                    "array": false,
-                    "elements": [
-                        "label",
-                        "free"
-                    ],
-                    "format": "enum",
                     "default": null
                 }
             ],
@@ -105,6 +152,16 @@
                     "array": false,
                     "size": 255,
                     "default": null
+                },
+                {
+                    "key": "view",
+                    "type": "string",
+                    "status": "available",
+                    "error": "",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null
                 }
             ],
             "indexes": [
@@ -128,7 +185,7 @@
             "databaseId": "main",
             "name": "locationCoordinates",
             "enabled": true,
-            "documentSecurity": false,
+            "documentSecurity": true,
             "attributes": [
                 {
                     "key": "locationId",
@@ -247,26 +304,87 @@
                     ]
                 }
             ]
+        },
+        {
+            "$id": "blurhashes",
+            "$permissions": [
+                "read(\"users\")"
+            ],
+            "databaseId": "main",
+            "name": "blurhashes",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "blurhash",
+                    "type": "string",
+                    "status": "available",
+                    "error": "",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "packRecommendations",
+            "$permissions": [
+                "read(\"users\")"
+            ],
+            "databaseId": "main",
+            "name": "packRecommendations",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "packId",
+                    "type": "string",
+                    "status": "available",
+                    "error": "",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_packId",
+                    "type": "key",
+                    "status": "available",
+                    "error": "",
+                    "attributes": [
+                        "packId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
         }
     ],
-    "functions": [
+    "buckets": [
         {
-            "$id": "guessLocation",
-            "name": "guessLocation",
-            "runtime": "node-18.0",
-            "execute": ["users"],
-            "events": [],
-            "schedule": "",
-            "timeout": 15,
-            "enabled": true,
-            "logging": true,
-            "entrypoint": "src/main.js",
-            "commands": "npm install",
-            "ignore": [
-                "node_modules",
-                ".npm"
+            "$id": "locationImages",
+            "$createdAt": "2023-12-02T15:53:58.488+00:00",
+            "$updatedAt": "2023-12-02T15:54:11.415+00:00",
+            "$permissions": [
+                "create(\"users\")"
             ],
-            "path": "functions/guessLocation"
+            "fileSecurity": true,
+            "name": "locationImages",
+            "enabled": true,
+            "maximumFileSize": 10485760,
+            "allowedFileExtensions": [
+                "jpg",
+                "png",
+                "jpeg"
+            ],
+            "compression": "none",
+            "encryption": true,
+            "antivirus": true
         }
     ]
 }

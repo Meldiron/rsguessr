@@ -57,7 +57,7 @@
 	class="relative overflow-hidden before:absolute before:top-0 before:start-1/2 before:bg-no-repeat before:bg-top before:bg-cover before:w-full before:h-full before:-z-[1] before:transform before:-translate-x-1/2"
 >
 	<div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10">
-		<!-- Announcement Banner -->
+		<!--
 		<div class="flex justify-center">
 			<a
 				href="https://www.osrsguessr.com/"
@@ -83,7 +83,7 @@
 				</span>
 			</a>
 		</div>
-		<!-- End Announcement Banner -->
+		End Announcement Banner -->
 
 		<!-- Title -->
 		<div class="mt-5 max-w-2xl text-center mx-auto">
@@ -123,10 +123,16 @@
 
 			{#if data.user}
 				<a
-					class="inline-flex justify-center items-center gap-x-3 text-center bg border border-brand-700 bg-transparent text-white text-sm rounded-md focus:outline-none focus:ring-1 focus:ring-brand-200 py-3 px-4 hover:border-brand-400"
+					class="inline-flex justify-center items-center gap-x-3 text-center bg border border-transparent bg-white text-brand-950 text-sm font-medium rounded-md focus:outline-none focus:ring-1 focus:ring-brand-200 py-3 px-4 hover:bg-brand-100"
 					href="/me/game"
 				>
 					Play Game
+				</a>
+				<a
+					class="inline-flex justify-center items-center gap-x-3 text-center bg border border-brand-700 bg-transparent text-white text-sm rounded-md focus:outline-none focus:ring-1 focus:ring-brand-200 py-3 px-4 hover:border-brand-400"
+					href="/me/packs"
+				>
+					My Packs
 				</a>
 			{/if}
 		</div>
@@ -274,6 +280,8 @@
 		<div class="hidden md:block col-span-4 md:col-span-3">
 			<div class="rounded-xl w-full h-[380px]">
 				<img
+					loading="lazy"
+					decoding="async"
 					class="rounded-xl w-full h-full object-center object-cover"
 					src="/gallery4.jpeg"
 					alt="Render"
@@ -285,6 +293,8 @@
 		<div class="col-span-4 md:col-span-3">
 			<div class="rounded-xl w-full h-[450px]">
 				<img
+					loading="lazy"
+					decoding="async"
 					class="rounded-xl w-full h-full object-center object-cover"
 					src="/gallery1.jpeg"
 					alt="Render"
@@ -296,6 +306,8 @@
 		<div class="col-span-4 md:col-span-3">
 			<div class="rounded-xl w-full h-[600px]">
 				<img
+					loading="lazy"
+					decoding="async"
 					class="rounded-xl w-full h-full object-center object-cover"
 					src="/gallery2.jpeg"
 					alt="Render"
@@ -307,6 +319,8 @@
 		<div class="col-span-4 md:col-span-3">
 			<div class="rounded-xl w-full h-[350px]">
 				<img
+					loading="lazy"
+					decoding="async"
 					class="rounded-xl w-full h-full object-center object-cover"
 					src="/gallery3.jpeg"
 					alt="Render"

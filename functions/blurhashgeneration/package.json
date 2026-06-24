@@ -1,0 +1,18 @@
+{
+  "name": "blurhash-generation",
+  "version": "1.0.0",
+  "description": "Generates blurhashes for every file in the locationImages bucket.",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "blurhash": "^2.0.5",
+    "node-appwrite": "^20.2.1",
+    "sharp": "^0.34.4"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}

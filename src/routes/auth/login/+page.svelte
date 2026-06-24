@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto, invalidateAll } from '$app/navigation';
 	import { account } from '$lib/appwrite';
 	import { ID } from 'appwrite';
 	import { fade } from 'svelte/transition';
@@ -6,8 +7,29 @@
 	let type: 'error' | 'success' | null = null;
 	let msg: string = '';
 	let loading: boolean = false;
+	let guestLoading: boolean = false;
 
 	let email: string = '';
+
+	async function createGuestUser() {
+		if (loading || guestLoading) {
+			return;
+		}
+
+		type = null;
+		msg = '';
+		guestLoading = true;
+		try {
+			await account.createAnonymousSession();
+			await invalidateAll();
+			await goto('/me/game');
+		} catch (error: any) {
+			type = 'error';
+			msg = `Unexpected error! ${error.message}`;
+		} finally {
+			guestLoading = false;
+		}
+	}
 
 	async function createMagicURLSession() {
 		if (loading) {
@@ -83,13 +105,28 @@
 						<button
 							type="submit"
 							class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-brand-600"
-							disabled={loading}
+							disabled={loading || guestLoading}
 						>
 							{loading ? 'Loading...' : 'Continue with Email'}
 						</button>
 					</div>
 				</form>
 				<!-- End Form -->
+
+				<div
+					class="py-3 flex items-center text-xs text-brand-400 uppercase before:flex-1 before:border-t before:border-brand-700 before:me-6 after:flex-1 after:border-t after:border-brand-700 after:ms-6"
+				>
+					Or
+				</div>
+
+				<button
+					type="button"
+					class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg border border-brand-700 bg-transparent text-white hover:border-brand-400 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-brand-600"
+					on:click={createGuestUser}
+					disabled={loading || guestLoading}
+				>
+					{guestLoading ? 'Loading...' : 'Play as Guest'}
+				</button>
 			</div>
 		</div>
 	</div>

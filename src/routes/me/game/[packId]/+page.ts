@@ -30,9 +30,23 @@ export const load: PageLoad = async ({ params, parent }) => {
 		])
 	]);
 
+	// Batch-fetch blurhashes (keyed by storage file id) for every location image.
+	const imageIds = locations.documents.map((location) => location.imageId).filter(Boolean);
+	const blurhashes: Record<string, string> = {};
+	if (imageIds.length > 0) {
+		const docs = await databases.listDocuments('main', 'blurhashes', [
+			Query.equal('$id', imageIds),
+			Query.limit(imageIds.length)
+		]);
+		for (const doc of docs.documents) {
+			blurhashes[doc.$id] = doc.blurhash;
+		}
+	}
+
 	return {
 		pack,
 		locations: locations.documents,
-		finishes: finishes.documents
+		finishes: finishes.documents,
+		blurhashes
 	};
 };
