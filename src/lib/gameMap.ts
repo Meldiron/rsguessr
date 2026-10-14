@@ -7,7 +7,7 @@
 // gazlloyd / wiki map viewers use) which renders the nicer "3D" maps and, unlike
 // the old mejrs GitHub mirror, serves instanced maps such as the Underworld /
 // City of Um (mapId 742). Bump MAP_VERSION when the wiki publishes a new render.
-export const MAP_VERSION = '2026-03-23_3d_a';
+export const MAP_VERSION = '2026-06-15';
 
 import { getMapInfo } from '$lib/mapList';
 

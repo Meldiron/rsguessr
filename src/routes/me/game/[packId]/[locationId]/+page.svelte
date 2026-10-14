@@ -765,18 +765,23 @@
 	/* Mobile                                                                 */
 	/* ---------------------------------------------------------------------- */
 	@media (max-width: 767px) {
+		/* A corner mini-map is too small to aim with a finger, so on phones the */
+		/* map sits under the screenshot instead. Maximize still covers it.      */
 		.image-pane {
-			height: 56vh;
+			height: 42vh;
 		}
-		.map-pane {
-			width: 11rem;
-			height: 9rem;
-		}
+		.game-root:not([data-maximized]) .map-pane,
 		.game-root[data-pinned]:not([data-maximized]) .map-pane {
-			width: calc(100vw - 1.5rem);
-			height: 60vh;
-			right: 0.75rem;
-			bottom: 0.75rem;
+			position: relative;
+			right: auto;
+			bottom: auto;
+			width: 100%;
+			height: 52vh;
+			margin-top: 0.75rem;
+		}
+		.map-toggle[aria-label$='in the corner'],
+		.map-toggle[aria-label='Unpin map'] {
+			display: none;
 		}
 	}
 </style>
